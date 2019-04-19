@@ -5,6 +5,9 @@ const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const path = require('path')
 
+// const Stomp = require('@stomp/stompjs')
+// console.log(Stomp)
+
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(express.static(path.join(__dirname, '..', 'public')))
@@ -36,3 +39,17 @@ app.listen(port, function() {
   console.log("Who's there?")
   console.log(`Your server, listening on port ${port}`)
 })
+
+// var url = 'http://3.93.103.201:8085/xchange/'
+// var client = Stomp.Client(url)
+
+// client.connect(login, passcode, connectCallback, errorCallback)
+
+// var connectCallback = function() {
+//   // called back after the client is connected and authenticated to the STOMP server
+// }
+
+// var errorCallback = function(error) {
+//   // display the error's message header:
+//   alert(error.headers.message)
+// }

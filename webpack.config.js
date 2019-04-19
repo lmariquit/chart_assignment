@@ -1,5 +1,8 @@
 module.exports = {
-  entry: './client/index.js',
+  entry: {
+    index: './client/index.js',
+    another: './public/assets/canvasjs.react.js'
+  },
   module: {
     rules: [
       {
@@ -21,7 +24,13 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js'
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all'
+    }
+  },
   devServer: {
     contentBase: './public'
-  }
+  },
+  plugins: [HTMLWebpackPluginConfig]
 }

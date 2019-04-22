@@ -38,7 +38,7 @@ app.use(function(err, req, res, next) {
 
 const port = process.env.PORT || 3000 // this can be very useful if you deploy to Heroku!
 
-db.sync() // sync our database
+db.sync({ force: true }) // sync our database
   .then(function() {
     app.listen(port, function() {
       console.log('Knock, knock')

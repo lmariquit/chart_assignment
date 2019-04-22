@@ -2,16 +2,20 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const Quotes = db.define('quotes', {
-  askPrice: {
-    type: Sequelize.INTEGER,
+  open: {
+    type: Sequelize.FLOAT,
     allowNull: false
   },
-  bidPrice: {
-    type: Sequelize.INTEGER,
+  high: {
+    type: Sequelize.FLOAT,
     allowNull: false
   },
-  exchange: {
-    type: Sequelize.STRING,
+  low: {
+    type: Sequelize.FLOAT,
+    allowNull: false
+  },
+  close: {
+    type: Sequelize.FLOAT,
     allowNull: false
   }
 })

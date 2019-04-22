@@ -13,3 +13,22 @@ router.get('/', async (req, res, next) => {
     next(err)
   }
 })
+
+router.post('/add', async (req, res, next) => {
+  let open = req.body.open
+  let high = req.body.high
+  let low = req.body.low
+  let close = req.body.close
+
+  try {
+    const added = await Quotes.create({
+      high,
+      low,
+      open,
+      close
+    })
+    res.status(201).json(added)
+  } catch (err) {
+    next(err)
+  }
+})

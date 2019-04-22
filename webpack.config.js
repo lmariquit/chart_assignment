@@ -2,10 +2,7 @@ const isDev = process.env.NODE_ENV === 'development'
 
 module.exports = {
   mode: isDev ? 'development' : 'production',
-  entry: [
-    '@babel/polyfill',
-    './client/index.js'
-  ],
+  entry: ['@babel/polyfill', './client/index.js'],
   module: {
     rules: [
       {
@@ -28,6 +25,7 @@ module.exports = {
     filename: 'bundle.js'
   },
   devServer: {
-    contentBase: './public'
+    contentBase: './public',
+    historyApiFallback: true
   }
 }

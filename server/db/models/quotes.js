@@ -17,6 +17,10 @@ const Quotes = db.define('quotes', {
   close: {
     type: Sequelize.FLOAT,
     allowNull: false
+  },
+  date: {
+    type: Sequelize.STRING,
+    allowNull: false
   }
 })
 

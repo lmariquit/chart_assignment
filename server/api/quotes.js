@@ -19,13 +19,15 @@ router.post('/add', async (req, res, next) => {
   let high = req.body.high
   let low = req.body.low
   let close = req.body.close
+  let date = req.body.date
 
   try {
     const added = await Quotes.create({
       high,
       low,
       open,
-      close
+      close,
+      date
     })
     res.status(201).json(added)
   } catch (err) {

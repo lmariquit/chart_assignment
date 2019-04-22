@@ -41,17 +41,19 @@ class App extends Component {
     //   console.log('askPrice:', quote.askPrice, 'bidPrice:', quote.bidPrice)
 
     // }
+    this.pastDataPoints = []
     this.prices = []
     this.prevPrices = []
     this.state = {
       date: `${new Date().getFullYear()} ${new Date().getMonth() +
         1} ${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`,
-      open: 35.85,
+      open: 5500,
       high: Math.max(this.prices) || 0,
       low: Math.min(this.prices) || 0,
-      close: 36.82,
+      close: 5200,
       diff: [],
-      updated: false
+      updated: false,
+      historical: []
     }
     this.callback = this.callback.bind(this)
   }
@@ -59,8 +61,17 @@ class App extends Component {
   async componentDidMount() {
     try {
       const { data } = await axios.get('/api/quotes')
-      // dispatch(getProduct(res.data))
       console.log('PRICESSS', data)
+      data.forEach(entry => {
+        this.pastDataPoints.push({
+          x: new Date(entry.date),
+          y: [entry.open, entry.high, entry.low, entry.close]
+        })
+      })
+      // console.log(this.pastDataPoints)
+      this.setState({
+        historical: [...this.pastDataPoints]
+      })
     } catch (err) {
       console.log('ERRORRED')
       console.error(err)
@@ -94,9 +105,9 @@ class App extends Component {
     // }
   }
 
-  shouldComponentUpdate() {
-    return this.state.diff.length > 0
-  }
+  // shouldComponentUpdate() {
+  //   return this.state.diff.length > 0
+  // }
 
   async callback(message) {
     // // called when the client receives a STOMP message from the server
@@ -116,7 +127,7 @@ class App extends Component {
       })
       if (this.state.diff.length > 0) {
         this.setState({
-          close: this.state.diff[0],
+          close: this.state.diff[0] * 1,
           high: Math.max(...this.prices),
           low: Math.min(...this.prices)
         })
@@ -129,18 +140,34 @@ class App extends Component {
     }
     console.log('aweoifj', new Date().getSeconds())
     if (new Date().getSeconds() === 0 && !this.state.updated) {
-      this.setState({
-        updated: true
-      })
       let data = await axios.post('/api/quotes/add', {
         open: this.state.open,
         high: this.state.high,
         low: this.state.low,
-        close: this.state.close
+        close: this.state.close,
+        date: this.state.date
+      })
+      this.setState({
+        updated: true,
+        historical: [
+          ...this.state.historical,
+          {
+            x: new Date(this.state.date),
+            y: [
+              this.state.open,
+              this.state.high,
+              this.state.low,
+              this.state.close
+            ]
+          }
+        ],
+        open: this.state.close
       })
     }
     if (new Date().getSeconds() === 1) {
       this.setState({
+        date: `${new Date().getFullYear()} ${new Date().getMonth() +
+          1} ${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`,
         updated: false
       })
     }
@@ -157,7 +184,7 @@ class App extends Component {
   }
 
   render() {
-    // console.log(this.state.date)
+    console.log('historical!!!', this.state.historical)
     const options = {
       theme: 'light2', // "light1", "light2", "dark1", "dark2"
       animationEnabled: false,
@@ -166,7 +193,7 @@ class App extends Component {
         text: 'BTCUSDT Bid Prices'
       },
       axisX: {
-        valueFormatString: 'YYYYMMDD HH:MM'
+        valueFormatString: 'YYYYMMDD hh:mm'
       },
       axisY: {
         includeZero: false,
@@ -182,10 +209,6 @@ class App extends Component {
           xValueFormatString: 'MMMM YY',
           dataPoints: [
             {
-              x: new Date('2019 4 2 2:40'),
-              y: [5300, 5555.5, 5054, 5200]
-            },
-            {
               x: new Date(this.state.date),
               y: [
                 this.state.open,
@@ -193,17 +216,8 @@ class App extends Component {
                 this.state.low,
                 this.state.close
               ]
-            }
-            // { x: new Date('2017-03-01'), y: [35.85, 36.3, 34.66, 36.07] },
-            // { x: new Date('2017-04-01'), y: [36.19, 37.5, 35.21, 36.15] },
-            // { x: new Date('2017-05-01'), y: [36.11, 37.17, 35.02, 36.11] },
-            // { x: new Date('2017-06-01'), y: [36.12, 36.57, 33.34, 33.74] },
-            // { x: new Date('2017-07-01'), y: [33.51, 35.86, 33.23, 35.47] },
-            // { x: new Date('2017-08-01'), y: [35.66, 36.7, 34.38, 35.07] },
-            // { x: new Date('2017-09-01'), y: [35.24, 38.15, 34.93, 38.08] },
-            // { x: new Date('2017-10-01'), y: [38.12, 45.8, 38.08, 45.49] },
-            // { x: new Date('2017-11-01'), y: [45.97, 47.3, 43.77, 44.84] },
-            // { x: new Date('2017-12-01'), y: [44.73, 47.64, 42.67, 46.16] }
+            },
+            ...this.state.historical
           ]
         }
       ]

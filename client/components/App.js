@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
+import SockJS from 'sockjs-client'
 var Stomp = require('stompjs')
 
 import CanvasJSReact from '../../public/assets/canvasjs.react'

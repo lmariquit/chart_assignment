@@ -1,8 +1,8 @@
+const isDev = process.env.NODE_ENV === 'development'
+
 module.exports = {
-  entry: {
-    index: './client/index.js',
-    another: './public/assets/canvasjs.react.js'
-  },
+  mode: isDev ? 'development' : 'production',
+  entry: './client/index.js',
   module: {
     rules: [
       {
@@ -24,13 +24,7 @@ module.exports = {
     publicPath: '/',
     filename: 'bundle.js'
   },
-  optimization: {
-    splitChunks: {
-      chunks: 'all'
-    }
-  },
   devServer: {
     contentBase: './public'
-  },
-  plugins: [HTMLWebpackPluginConfig]
+  }
 }

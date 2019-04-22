@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import axios from 'axios'
+var Stomp = require('stompjs')
 // import CanvasJS from 'canvasjs'
 
 import CanvasJSReact from '../../public/assets/canvasjs.react'
@@ -6,6 +8,66 @@ var CanvasJS = CanvasJSReact.CanvasJS
 var CanvasJSChart = CanvasJSReact.CanvasJSChart
 
 class App extends Component {
+  constructor() {
+    super()
+    var ws = new SockJS('http://3.93.103.201:8085/xchange/')
+    var client = Stomp.over(ws)
+    client.debug = () => {}
+    client.connect({}, connectCallback, errorCallback)
+    console.log('AHHHHHHHH')
+
+    var connectCallback = function() {
+      // called back after the client is connected and authenticated to the STOMP server
+      console.log('SUCCESSFULLY LOGGED IN')
+    }
+
+    var errorCallback = function(error) {
+      // display the error's message header:
+      console.log('THERE WAS AN ERROR')
+      alert(error.headers.message)
+    }
+
+    var subscription = setTimeout(
+      () => client.subscribe('/topic/orderbook/BTCUSDT', callback),
+      1000
+    )
+
+    var callback = function(message) {
+      // // called when the client receives a STOMP message from the server
+      var quote = JSON.parse(message.body)
+      console.log('QUOTE!!!', quote)
+      console.log('askPrice:', quote.askPrice, 'bidPrice:', quote.bidPrice)
+    }
+
+    // client.onopen = function() {
+    //   console.log('open')
+    //   client.send('test')
+    // }
+
+    // client.onmessage = function(e) {
+    //   console.log('message', e.data)
+    //   client.close()
+    // }
+
+    // client.subscribe('/topic/orderbook/BTCUSDT', function(message) {
+    //   console.log(message)
+    // })
+
+    // client.onclose = function() {
+    //   console.log('close')
+    // }
+  }
+
+  addToDb() {
+    try {
+      const res = await axios.get('/api/products')
+      dispatch(getProduct(res.data))
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+
   render() {
     const options = {
       theme: 'light2', // "light1", "light2", "dark1", "dark2"

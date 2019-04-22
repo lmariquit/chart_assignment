@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-console.log(_.join(['canvasjs', 'react', 'loaded!'], ' '))
+console.log(_.join(['canvasjs', 'react', 'loaded!!!'], ' '))
 
 var React = require('react')
 var CanvasJS = require('./canvasjs.min.js')

@@ -5,7 +5,7 @@ const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const path = require('path')
 
-const db = require('./db');
+const db = require('./db')
 // const Stomp = require('@stomp/stompjs')
 // console.log(Stomp)
 
@@ -14,6 +14,8 @@ app.use(helmet())
 app.use(express.static(path.join(__dirname, '..', 'public')))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use('/api', require('./api'))
 
 // If API route not found...
 // router.use(function(req, res, next) {
@@ -36,8 +38,8 @@ app.use(function(err, req, res, next) {
 
 const port = process.env.PORT || 3000 // this can be very useful if you deploy to Heroku!
 
-db.sync()  // sync our database
-  .then(function(){
+db.sync() // sync our database
+  .then(function() {
     app.listen(port, function() {
       console.log('Knock, knock')
       console.log("Who's there?")

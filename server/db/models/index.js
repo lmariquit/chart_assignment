@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
-const Price = require('./price')
+const Quotes = require('./quotes')
 
 module.exports = {
-  Price
+  Quotes
 }

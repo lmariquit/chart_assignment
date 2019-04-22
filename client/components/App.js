@@ -35,18 +35,33 @@ class App extends Component {
     var callback = function(message) {
       // // called when the client receives a STOMP message from the server
       var quote = JSON.parse(message.body)
-      console.log('QUOTE!!!', quote)
+      // console.log('QUOTE!!!', quote)
       console.log('askPrice:', quote.askPrice, 'bidPrice:', quote.bidPrice)
     }
   }
 
-  // async addToDb() {
+async componentDidMount () {
+  //  this.fetchPrices()
+    try {
+      const {data} = await axios.get('/api/quotes')
+      // dispatch(getProduct(res.data))
+      console.log('PRICESSS', data)
+    } catch (err) {
+      console.log('ERRORRED')
+      console.error(err)
+    }
+    console.log("IM HERE")
+  }
+
+  // fetchPrices = async () => {
   //   try {
-  //     const res = await axios.get('/api/products')
-  //     dispatch(getProduct(res.data))
+  //     const res = await axios.get('/api/price')
+  //     // dispatch(getProduct(res.data))
+  //     console.log('PRICESSS', res.data)
   //   } catch (err) {
   //     console.error(err)
   //   }
+  //   console.log("IM HERE")
   // }
 
   render() {

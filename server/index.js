@@ -5,6 +5,7 @@ const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const path = require('path')
 
+const db = require('./db');
 // const Stomp = require('@stomp/stompjs')
 // console.log(Stomp)
 
@@ -34,11 +35,15 @@ app.use(function(err, req, res, next) {
 })
 
 const port = process.env.PORT || 3000 // this can be very useful if you deploy to Heroku!
-app.listen(port, function() {
-  console.log('Knock, knock')
-  console.log("Who's there?")
-  console.log(`Your server, listening on port ${port}`)
-})
+
+db.sync()  // sync our database
+  .then(function(){
+    app.listen(port, function() {
+      console.log('Knock, knock')
+      console.log("Who's there?")
+      console.log(`Your server, listening on port ${port}`)
+    })
+  })
 
 // var url = 'http://3.93.103.201:8085/xchange/'
 // var client = Stomp.Client(url)

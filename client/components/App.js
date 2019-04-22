@@ -38,35 +38,16 @@ class App extends Component {
       console.log('QUOTE!!!', quote)
       console.log('askPrice:', quote.askPrice, 'bidPrice:', quote.bidPrice)
     }
-
-    // client.onopen = function() {
-    //   console.log('open')
-    //   client.send('test')
-    // }
-
-    // client.onmessage = function(e) {
-    //   console.log('message', e.data)
-    //   client.close()
-    // }
-
-    // client.subscribe('/topic/orderbook/BTCUSDT', function(message) {
-    //   console.log(message)
-    // })
-
-    // client.onclose = function() {
-    //   console.log('close')
-    // }
   }
 
-  addToDb() {
-    try {
-      const res = await axios.get('/api/products')
-      dispatch(getProduct(res.data))
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
+  // async addToDb() {
+  //   try {
+  //     const res = await axios.get('/api/products')
+  //     dispatch(getProduct(res.data))
+  //   } catch (err) {
+  //     console.error(err)
+  //   }
+  // }
 
   render() {
     const options = {

@@ -109,7 +109,7 @@ class App extends Component {
       }
     }
 
-    // if seconds is 0, post to DB the date and price, then add the datapoint to historical, which will remain displayed in chart. Reset high and low, leave close price in the diff array and make tne old closeprice tne new openprice
+    // if seconds is 0, post to DB the date and price, then add the datapoint to historical, which will remain displayed in chart. Leave close price in the diff array and make the old closeprice tne new high, low, open price
     if (new Date().getSeconds() === 0 && !this.state.updated) {
       let data = await axios.post('/api/quotes/add', {
         open: this.state.open,
@@ -132,9 +132,9 @@ class App extends Component {
             ]
           }
         ],
-        high: Number.NEGATIVE_INFINITY,
-        low: Number.POSITIVE_INFINITY,
         diff: [this.state.close],
+        high: this.state.close,
+        low: this.state.close,
         open: this.state.close
       })
     }

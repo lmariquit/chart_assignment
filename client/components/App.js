@@ -20,9 +20,9 @@ class App extends Component {
     this.state = {
       date: `${new Date().getFullYear()} ${new Date().getMonth() +
         1} ${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`,
-      open: 5260,
-      high: Math.max(this.prices) || 0,
-      low: Math.min(this.prices) || 0,
+      open: 5280,
+      high: Number.NEGATIVE_INFINITY,
+      low: Number.POSITIVE_INFINITY,
       close: 0,
       diff: [],
       updated: false,
@@ -34,7 +34,6 @@ class App extends Component {
   async componentDidMount() {
     try {
       const { data } = await axios.get('/api/quotes')
-      console.log('PRICESSS', data)
       data.forEach(entry => {
         this.pastDataPoints.push({
           x: new Date(entry.date),
@@ -71,7 +70,7 @@ class App extends Component {
   async callback(message) {
     // // called when the client receives a STOMP message from the server
     var quote = JSON.parse(message.body)
-    console.log('askPrice:', quote.askPrice, 'bidPrice:', quote.bidPrice)
+    // console.log('askPrice:', quote.askPrice, 'bidPrice:', quote.bidPrice)
 
     let newPrices = []
     for (let price in quote.bidPrice) {
@@ -86,18 +85,26 @@ class App extends Component {
       })
       if (this.state.diff.length > 0) {
         this.setState({
-          close: this.state.diff[0] * 1,
-          high: Math.max(...this.state.diff),
+          close: this.state.diff[0] * 1
+        })
+      }
+      if (Math.max(...this.state.diff) > this.state.high) {
+        this.setState({
+          high: Math.max(...this.state.diff)
+        })
+      }
+      if (Math.min(...this.state.diff) < this.state.low) {
+        this.setState({
           low: Math.min(...this.state.diff)
         })
       }
-      console.log(this.state)
+      // console.log(this.state)
     } else {
       for (let price in quote.bidPrice) {
         this.prices.push(price)
       }
     }
-    console.log('aweoifj', new Date().getSeconds())
+    // console.log('aweoifj', new Date().getSeconds())
     if (new Date().getSeconds() === 0 && !this.state.updated) {
       let data = await axios.post('/api/quotes/add', {
         open: this.state.open,
@@ -120,7 +127,7 @@ class App extends Component {
             ]
           }
         ],
-        diff: [],
+        diff: [this.state.close],
         open: this.state.close
       })
     }
@@ -143,7 +150,7 @@ class App extends Component {
   }
 
   render() {
-    console.log('historical!!!', this.state.historical)
+    // console.log('historical!!!', this.state.historical)
     const options = {
       theme: 'light2', // "light1", "light2", "dark1", "dark2"
       animationEnabled: false,

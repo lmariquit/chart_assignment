@@ -18,6 +18,10 @@ app.use('/api', require('./api'))
 // default to index.html if API route not provided
 app.get('*', function(req, res) {
   res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
+  if (req.secure) {
+    res.redirect('http://lm-exone-chart.herokuapp.com' + req.url)
+    console.log('REDIRECTING!!', 'http://' + req.headers.host + req.url)
+  }
 })
 
 // We messed up...

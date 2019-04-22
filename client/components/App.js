@@ -14,33 +14,6 @@ client.debug = () => {}
 class App extends Component {
   constructor() {
     super()
-    // var ws = new SockJS('http://3.93.103.201:8085/xchange/')
-    // var client = Stomp.over(ws)
-    // client.debug = () => {}
-    // client.connect({}, connectCallback, errorCallback)
-
-    // var connectCallback = function() {
-    //   // called back after the client is connected and authenticated to the STOMP server
-    //   console.log('SUCCESSFULLY LOGGED IN')
-    // }
-
-    // var errorCallback = function(error) {
-    //   // display the error's message header:
-    //   console.log('THERE WAS AN ERROR')
-    //   alert(error.headers.message)
-    // }
-
-    // var subscription = setTimeout(
-    //   () => client.subscribe('/topic/orderbook/BTCUSDT', callback),
-    //   1000
-    // )
-
-    // var callback = function(message) {
-    //   // // called when the client receives a STOMP message from the server
-    //   var quote = JSON.parse(message.body)
-    //   console.log('askPrice:', quote.askPrice, 'bidPrice:', quote.bidPrice)
-
-    // }
     this.pastDataPoints = []
     this.prices = []
     this.prevPrices = []
@@ -50,7 +23,7 @@ class App extends Component {
       open: 5260,
       high: Math.max(this.prices) || 0,
       low: Math.min(this.prices) || 0,
-      close: 5200,
+      close: 0,
       diff: [],
       updated: false,
       historical: []
@@ -68,7 +41,6 @@ class App extends Component {
           y: [entry.open, entry.high, entry.low, entry.close]
         })
       })
-      // console.log(this.pastDataPoints)
       this.setState({
         historical: [...this.pastDataPoints]
       })
@@ -77,9 +49,6 @@ class App extends Component {
       console.error(err)
     }
 
-    // var ws = new SockJS('http://3.93.103.201:8085/xchange/')
-    // var client = Stomp.over(ws)
-    // client.debug = () => {}
     client.connect({}, connectCallback, errorCallback)
 
     var connectCallback = function() {
@@ -97,17 +66,7 @@ class App extends Component {
       () => client.subscribe('/topic/orderbook/BTCUSDT', this.callback),
       1000
     )
-
-    // var callback = function(message) {
-    //   // // called when the client receives a STOMP message from the server
-    //   var quote = JSON.parse(message.body)
-    //   console.log('askPrice:', quote.askPrice, 'bidPrice:', quote.bidPrice)
-    // }
   }
-
-  // shouldComponentUpdate() {
-  //   return this.state.diff.length > 0
-  // }
 
   async callback(message) {
     // // called when the client receives a STOMP message from the server
@@ -126,7 +85,6 @@ class App extends Component {
         diff: this.findDiff(this.prevPrices, this.prices)
       })
       if (this.state.diff.length > 0) {
-        // console.log(this.state.diff)
         this.setState({
           close: this.state.diff[0] * 1,
           high: Math.max(...this.state.diff),
@@ -177,7 +135,6 @@ class App extends Component {
 
   findDiff(prevPrices, prices) {
     let diff = prices.filter(price => prevPrices.indexOf(price) < 0)
-    // console.log('DIFFS', diff)
     return diff
   }
 

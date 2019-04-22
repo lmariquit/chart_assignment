@@ -1,3 +1,4 @@
+const path = require('path')
 const isDev = process.env.NODE_ENV === 'development'
 
 module.exports = {
@@ -25,7 +26,7 @@ module.exports = {
     filename: 'bundle.js'
   },
   devServer: {
-    contentBase: './public',
+    contentBase: path.resolve(__dirname),
     historyApiFallback: true,
     publicPath: '/'
   }

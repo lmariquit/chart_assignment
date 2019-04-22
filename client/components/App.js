@@ -47,7 +47,7 @@ class App extends Component {
     this.state = {
       date: `${new Date().getFullYear()} ${new Date().getMonth() +
         1} ${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`,
-      open: 5500,
+      open: 5260,
       high: Math.max(this.prices) || 0,
       low: Math.min(this.prices) || 0,
       close: 5200,
@@ -126,10 +126,11 @@ class App extends Component {
         diff: this.findDiff(this.prevPrices, this.prices)
       })
       if (this.state.diff.length > 0) {
+        // console.log(this.state.diff)
         this.setState({
           close: this.state.diff[0] * 1,
-          high: Math.max(...this.prices),
-          low: Math.min(...this.prices)
+          high: Math.max(...this.state.diff),
+          low: Math.min(...this.state.diff)
         })
       }
       console.log(this.state)
@@ -161,6 +162,7 @@ class App extends Component {
             ]
           }
         ],
+        diff: [],
         open: this.state.close
       })
     }

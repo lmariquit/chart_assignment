@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 var Stomp = require('stompjs')
-// import CanvasJS from 'canvasjs'
 
 import CanvasJSReact from '../../public/assets/canvasjs.react'
 var CanvasJS = CanvasJSReact.CanvasJS
@@ -20,7 +19,7 @@ class App extends Component {
     this.state = {
       date: `${new Date().getFullYear()} ${new Date().getMonth() +
         1} ${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`,
-      open: 5280,
+      open: 0,
       high: Number.NEGATIVE_INFINITY,
       low: Number.POSITIVE_INFINITY,
       close: 0,
@@ -32,6 +31,7 @@ class App extends Component {
   }
 
   async componentDidMount() {
+    // get quotes from DB. Add them to pastdatapoints and set as historical state. Take the close price of the prev quote and set it to the new open price
     try {
       const { data } = await axios.get('/api/quotes')
       data.forEach(entry => {
@@ -42,6 +42,9 @@ class App extends Component {
       })
       this.setState({
         historical: [...this.pastDataPoints]
+      })
+      this.setState({
+        open: this.state.historical[0].y[3]
       })
     } catch (err) {
       console.log('ERRORRED')
@@ -70,14 +73,15 @@ class App extends Component {
   async callback(message) {
     // // called when the client receives a STOMP message from the server
     var quote = JSON.parse(message.body)
-    // console.log('askPrice:', quote.askPrice, 'bidPrice:', quote.bidPrice)
 
+    // add bid prices to a temporary newPrice array
     let newPrices = []
     for (let price in quote.bidPrice) {
       newPrices.push(price)
     }
 
-    if (this.prices) {
+    // If there are values in the price array, move them to prevPrice array and compare to newPrices. Add the differences to diff state. For all these diffs, set the largest to high, the smallest to low, and the lastest to close.
+    if (this.prices.length > 0) {
       this.prevPrices = [...this.prices]
       this.prices = newPrices
       this.setState({
@@ -98,13 +102,13 @@ class App extends Component {
           low: Math.min(...this.state.diff)
         })
       }
-      // console.log(this.state)
     } else {
       for (let price in quote.bidPrice) {
         this.prices.push(price)
       }
     }
-    // console.log('aweoifj', new Date().getSeconds())
+
+    // if seconds is 0, post to DB the date and price, then add the datapoint to historical, which will remain displayed in chart. Reset high and low, leave close price in the diff array and make tne old closeprice tne new openprice
     if (new Date().getSeconds() === 0 && !this.state.updated) {
       let data = await axios.post('/api/quotes/add', {
         open: this.state.open,
@@ -127,6 +131,8 @@ class App extends Component {
             ]
           }
         ],
+        high: Number.NEGATIVE_INFINITY,
+        low: Number.POSITIVE_INFINITY,
         diff: [this.state.close],
         open: this.state.close
       })
@@ -191,7 +197,6 @@ class App extends Component {
     return (
       <div>
         <CanvasJSChart options={options} onRef={ref => (this.chart = ref)} />
-        {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
       </div>
     )
   }

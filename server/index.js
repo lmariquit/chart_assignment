@@ -6,8 +6,6 @@ const bodyParser = require('body-parser')
 const path = require('path')
 
 const db = require('./db')
-// const Stomp = require('@stomp/stompjs')
-// console.log(Stomp)
 
 app.use(morgan('dev'))
 app.use(helmet())
@@ -16,13 +14,6 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.use('/api', require('./api'))
-
-// If API route not found...
-// router.use(function(req, res, next) {
-//   const err = new Error('Not found.')
-//   err.status = 404
-//   next(err)
-// })
 
 // default to index.html if API route not provided
 app.get('*', function(req, res) {
@@ -46,17 +37,3 @@ db.sync({ force: true }) // sync our database
       console.log(`Your server, listening on port ${port}`)
     })
   })
-
-// var url = 'http://3.93.103.201:8085/xchange/'
-// var client = Stomp.Client(url)
-
-// client.connect(login, passcode, connectCallback, errorCallback)
-
-// var connectCallback = function() {
-//   // called back after the client is connected and authenticated to the STOMP server
-// }
-
-// var errorCallback = function(error) {
-//   // display the error's message header:
-//   alert(error.headers.message)
-// }

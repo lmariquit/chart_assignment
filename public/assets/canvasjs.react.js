@@ -22,7 +22,6 @@ class CanvasJSChart extends React.Component {
         : '400px'
     this.chartContainerId =
       'canvasjs-react-chart-container-' + CanvasJSChart._cjsContainerId++
-    // this.addToChart = this.addToChart.bind(this)
   }
   componentDidMount() {
     //Create Chart and Render
@@ -46,12 +45,7 @@ class CanvasJSChart extends React.Component {
     if (this.props.onRef) this.props.onRef(undefined)
   }
 
-  // addToChart(date, arr) {
-  //   this.chart.addTo('axisX', { x: date, y: arr })
-  // }
-
   render() {
-    //return React.createElement('div', { id: this.chartContainerId, style: this.containerProps });
     return <div id={this.chartContainerId} style={this.containerProps} />
   }
 }

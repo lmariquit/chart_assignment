@@ -89,6 +89,11 @@ class App extends Component {
         diff: this.findDiff(this.prevPrices, this.prices)
       })
       if (this.state.diff.length > 0) {
+        if (this.state.open === 0) {
+          this.setState({
+            open: this.state.diff[0] * 1
+          })
+        }
         this.setState({
           close: this.state.diff[0] * 1
         })
@@ -157,7 +162,6 @@ class App extends Component {
   }
 
   render() {
-    // console.log('historical!!!', this.state.historical)
     const options = {
       theme: 'light2', // "light1", "light2", "dark1", "dark2"
       animationEnabled: false,
